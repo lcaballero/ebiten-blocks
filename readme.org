@@ -26,17 +26,17 @@
   executable to =$GOPATH/bin/= and then execute the command.
 
 * Game Play
-  Use *j* to move *left*.
+  Use =j= to move =left=.
 
-  Use *l* to move *right*.
+  Use =l= to ove =right=.
 
-  Use *space* to *rotate* the peice.
+  Use =space= to =rotate= the peice.
 
-  Use *k* to drop the peice.
+  Use =k= to =drop= the peice.
 
-  Use *p* to *pause* the game.
+  Use =p= to =pause= the game.
 
-  Use *q* to *quit* the game.
+  Use =q= to =quit= the game.
 
   Use =r= to =reset= peice, sending the falling peice to the top, but only
   before it's been placed in the stack
