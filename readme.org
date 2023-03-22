@@ -24,3 +24,19 @@
 
   That should pull down the project dependencies, write the built
   executable to =$GOPATH/bin/= and then execute the command.
+
+* Game Play
+  Use *j* to move *left*.
+
+  Use *l* to move *right*.
+
+  Use *space* to *rotate* the peice.
+
+  Use *k* to drop the peice.
+
+  Use *p* to *pause* the game.
+
+  Use *q* to *quit* the game.
+
+  Use *r* to *reset* send falling peice to the top, but only before it's been
+  placed in the stack

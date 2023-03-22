@@ -1,5 +1,7 @@
 * Tasks
 
+** TODO Fix peices overshooting the highest bottom position
+
 ** TODO Record each even and replay those events
 
 ** TODO Fix rotation on the sides of the board to keep the shape on the board
