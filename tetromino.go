@@ -119,7 +119,7 @@ func (t *Tetromino) Center() shapes.Vec {
 }
 
 func (t *Tetromino) Accelerate() {
-	t.velocity = shapes.Vec{0, 400}
+	t.velocity = shapes.Vec{0, 600}
 }
 
 func (t *Tetromino) MoveCenterTo(c shapes.Vec) *Tetromino {

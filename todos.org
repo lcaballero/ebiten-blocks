@@ -1,5 +1,7 @@
 * Tasks
 
+** TODO Record each even and replay those events
+
 ** TODO Fix rotation on the sides of the board to keep the shape on the board
    Rotating a Z piece by the right side of the board cause the right
    side of the peice to go outside the board.
@@ -12,6 +14,11 @@
 
 ** TODO Draw board possible with vertical grid alignment
 
+* Completed
+
+** DONE Add more to the score based on the number of lines captured
+** DONE Adjust velocity of new blocks at each level
+** DONE Make score board level up after every 10 lines captured
 ** DONE Add pieces to the board when it has reached it's final position
 ** DONE When a row is cleared update/add to the score   
 ** DONE Implement clearing a row when it is completed

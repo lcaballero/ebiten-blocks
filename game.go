@@ -51,7 +51,7 @@ func NewGame() *Game {
 }
 
 func (b *Game) velocity() shapes.Vec {
-	return shapes.Vec{0, 10}
+	return b.background.scoring.Velocity()
 }
 
 func (b *Game) top() shapes.Vec {
