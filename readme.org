@@ -38,5 +38,5 @@
 
   Use *q* to *quit* the game.
 
-  Use *r* to *reset* send falling peice to the top, but only before it's been
-  placed in the stack
+  Use _r_ to _reset_ peice, sending the falling peice to the top, but only
+  before it's been placed in the stack
