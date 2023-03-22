@@ -6,7 +6,8 @@
 
 * Getting Started
   Use the =run.sh= script to build and run the project.  It requires a
-  machine with Go 1.19 installed and setup.
+  Mac or Linux machine with Go 1.19 installed and setup.  (It will
+  likely run on Windows as well, it is just untested on that Platform)
 
   Add =$GOPATH/bin= to your path for convenience.
 
