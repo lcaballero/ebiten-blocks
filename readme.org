@@ -1,0 +1,25 @@
+* Purpose
+  This is a tetris clone done from scratch to gain some experience
+  with the [[https://ebitengine.org/][ebiten]] engine.
+
+  There are a handful of known bugs not yet fixed as of 2023-03-22.
+
+* Getting Started
+  Use the =run.sh= script to build and run the project.  It requires a
+  machine with Go 1.19 installed and setup.
+
+  Add =$GOPATH/bin= to your path for convenience.
+
+  #+begin_src shell
+    export PATH="$GOPATH/bin:$PATH"
+  #+end_src
+
+  Then in a terminal, navigate to this directory and run the following
+  command:
+
+  #+begin_src shell
+    go mod tidy && ./run.sh build && ebiten-01
+  #+end_src
+
+  That should pull down the project dependencies, write the built
+  executable to =$GOPATH/bin/= and then execute the command.
