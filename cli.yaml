@@ -9,7 +9,7 @@ sub-commands:
       - name: seed
         type: int64
         usage: "use the given seed for rng"
-        value: 12231
+        value: 0
       - name: dev
         type: bool
         usage: "run in dev-mode with some dev useful key-handling"

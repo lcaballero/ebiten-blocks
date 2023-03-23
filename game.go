@@ -34,7 +34,8 @@ type Game struct {
 
 func NewGame(opts NewGameOpts) *Game {
 	p := NewPieces()
-	rnd := rand.NewRnd(opts.Seed())
+	seed := Seed(opts.Seed())
+	rnd := rand.NewRnd(seed)
 	bg := NewBackground()
 	game := &Game{
 		background: bg,
@@ -166,7 +167,6 @@ func (b *Game) Update() error {
 	b.board.CheckBounds(b.current)
 	if b.current.isFrozen {
 		rows := b.board.ClearFullRows(b.current)
-		//log.Printf("rows: %v", rows)
 		b.background.scoring = b.background.scoring.Add(len(rows))
 		b.rotateInNextPeice()
 	}
