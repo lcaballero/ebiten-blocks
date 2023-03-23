@@ -9,14 +9,13 @@ import (
 )
 
 type Tetromino struct {
-	pos      shapes.Vec
-	start    shapes.Vec
 	image    *ebiten.Image
+	pos      shapes.Vec
+	size     float64
 	tetro    Tetro
 	rot      Rotation
 	velocity shapes.Vec
 	isFrozen bool
-	size     float64
 }
 
 func (t *Tetromino) Update(elapsed time.Duration, dt float64) {

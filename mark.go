@@ -8,9 +8,19 @@ import (
 type mark struct {
 	image *ebiten.Image
 	pos   shapes.Vec
-	rc    [2]int
 	size  float64
+	rc    [2]int
 	down  int
+}
+
+func (m *mark) in(grid grid) bool {
+	_, in := grid[m.rc]
+	return in
+}
+
+func (m *mark) up() *mark {
+	m.rc = [2]int{m.rc[0], m.rc[1] - 1}
+	return m
 }
 
 func (m *mark) Draw(screen *ebiten.Image) {

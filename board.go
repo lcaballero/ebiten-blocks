@@ -97,21 +97,21 @@ func (b *Board) checkCollide(t *Tetromino) bool {
 // top of the stack but was halted because it either exited the board
 // or collided with pieces below the top of the stack
 func (b *Board) topOfStack(t *Tetromino, marks []*mark) {
-	isInGrid := func(ms []*mark) bool {
-		_, in0 := b.grid[ms[0].rc]
-		_, in1 := b.grid[ms[1].rc]
-		_, in2 := b.grid[ms[2].rc]
-		_, in3 := b.grid[ms[3].rc]
+	hasOverlap := func(ms []*mark) bool {
+		in0 := ms[0].in(b.grid)
+		in1 := ms[1].in(b.grid)
+		in2 := ms[2].in(b.grid)
+		in3 := ms[3].in(b.grid)
 		return in0 || in1 || in2 || in3
 	}
 	moveUp := func(ms []*mark) {
-		ms[0].rc = [2]int{ms[0].rc[0], ms[0].rc[1] - 1}
-		ms[1].rc = [2]int{ms[1].rc[0], ms[1].rc[1] - 1}
-		ms[2].rc = [2]int{ms[2].rc[0], ms[2].rc[1] - 1}
-		ms[3].rc = [2]int{ms[3].rc[0], ms[3].rc[1] - 1}
+		ms[0].up()
+		ms[1].up()
+		ms[2].up()
+		ms[3].up()
 	}
 	up := 0
-	for isInGrid(marks) {
+	for hasOverlap(marks) {
 		moveUp(marks)
 		up++
 	}
