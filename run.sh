@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build() {
-    go install
+    go generate ./... && go install
 }
 
 tests() {

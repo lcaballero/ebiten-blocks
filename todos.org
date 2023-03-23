@@ -2,6 +2,14 @@
 
 ** TODO Fix peices overshooting the highest bottom position
 
+** TODO Start the game with a different seed
+
+** Add flags to control how the program runs
+
+** TODO Make a start screen
+
+** TODO Need an ending screen
+
 ** TODO Record each even and replay those events
 
 ** TODO Fix rotation on the sides of the board to keep the shape on the board
@@ -15,6 +23,18 @@
    second is captured and executed.
 
 ** TODO Draw board possible with vertical grid alignment
+
+** TODO Make an options screen
+
+** TODO Add sounds
+   - Music to jam-out to when playing the game
+   - Sound when the block hits the bottom or land on the stack
+   - Satisfying row completion sounds for 1,2,3,4 rows completed at once
+   - Game over wah-wah-uh-oh sound
+
+* Nice to Haves
+
+** TODO Possibly keep a record of personal best scores
 
 * Completed
 

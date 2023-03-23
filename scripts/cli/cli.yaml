@@ -1,0 +1,14 @@
+---
+package: main
+name: "ebiten-01"
+usage: "run the clone of Tetris"
+sub-commands:
+  - name: new-game
+    usage: "start a new game"
+    flags:
+      - name: seed
+        type: int
+        usage: "use the given seed for rng"
+      - name: dev
+        type: bool
+        usage: "run in dev-mode with some dev useful key-handling"
