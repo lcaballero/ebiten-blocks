@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"time"
 
@@ -33,9 +32,9 @@ type Game struct {
 	rnd     rand.Rnd
 }
 
-func NewGame() *Game {
+func NewGame(opts NewGameOpts) *Game {
 	p := NewPieces()
-	rnd := rand.NewRnd(12231)
+	rnd := rand.NewRnd(opts.Seed())
 	bg := NewBackground()
 	game := &Game{
 		background: bg,
@@ -167,7 +166,7 @@ func (b *Game) Update() error {
 	b.board.CheckBounds(b.current)
 	if b.current.isFrozen {
 		rows := b.board.ClearFullRows(b.current)
-		log.Printf("rows: %v", rows)
+		//log.Printf("rows: %v", rows)
 		b.background.scoring = b.background.scoring.Add(len(rows))
 		b.rotateInNextPeice()
 	}

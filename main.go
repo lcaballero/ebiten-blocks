@@ -20,7 +20,7 @@ func main() {
 }
 
 func StartGame(vals Vals) error {
-	game := NewGame()
+	game := NewGame(NewGameOpts{vals})
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Tetris")
 	err := ebiten.RunGame(game)

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lcaballero/ebiten-01/shapes"
 )
@@ -19,17 +17,6 @@ func NewBoard(box shapes.Rect) *Board {
 		box:  box,
 		grid: grid{},
 	}
-}
-
-func (b *Board) Has(x, y int) bool {
-	return false
-}
-
-func (b *Board) In(x, y int) bool {
-	return false
-}
-
-func (b *Board) Fill(t *Tetromino) {
 }
 
 func (b *Board) CanGoRight(t *Tetromino) bool {
@@ -73,6 +60,8 @@ func (b *Board) CheckBounds(t *Tetromino) {
 	if y > maxY {
 		t.pos = shapes.Vec{t.pos.X(), float64(maxY * size)}
 		t.isFrozen = true
+		marks := b.positions(t)
+		b.topOfStack(t, marks)
 		b.finalizePosition(t)
 		return
 	}
@@ -80,6 +69,8 @@ func (b *Board) CheckBounds(t *Tetromino) {
 	if b.checkCollide(t) {
 		t.pos = t.roundPosToSize()
 		t.isFrozen = true
+		marks := b.positions(t)
+		b.topOfStack(t, marks)
 		b.finalizePosition(t)
 		return
 	}
@@ -101,21 +92,59 @@ func (b *Board) checkCollide(t *Tetromino) bool {
 	return false
 }
 
-func (b *Board) finalizePosition(t *Tetromino) {
-	log.Printf("finalizing piece")
+// topOfStack moves the Tetromino to the top of the stack based on
+// it's current position, which due to velocity may have over-shot the
+// top of the stack but was halted because it either exited the board
+// or collided with pieces below the top of the stack
+func (b *Board) topOfStack(t *Tetromino, marks []*mark) {
+	isInGrid := func(ms []*mark) bool {
+		_, in0 := b.grid[ms[0].rc]
+		_, in1 := b.grid[ms[1].rc]
+		_, in2 := b.grid[ms[2].rc]
+		_, in3 := b.grid[ms[3].rc]
+		return in0 || in1 || in2 || in3
+	}
+	moveUp := func(ms []*mark) {
+		ms[0].rc = [2]int{ms[0].rc[0], ms[0].rc[1] - 1}
+		ms[1].rc = [2]int{ms[1].rc[0], ms[1].rc[1] - 1}
+		ms[2].rc = [2]int{ms[2].rc[0], ms[2].rc[1] - 1}
+		ms[3].rc = [2]int{ms[3].rc[0], ms[3].rc[1] - 1}
+	}
+	up := 0
+	for isInGrid(marks) {
+		moveUp(marks)
+		up++
+	}
+	if up == 0 {
+		return
+	}
+	t.pos = t.pos.Sub(shapes.Vec{0, t.size * float64(up)})
+}
+
+func (b *Board) positions(t *Tetromino) []*mark {
 	blks := t.blocks()
 	size := t.size
+	marks := []*mark{}
 	for _, bk := range blks {
 		p := t.pos.Add(bk.Scale(size, size))
 		xm, ym := p.IntComponents()
 		x, y := xm/10, ym/10
 		rc := [2]int{x, y}
-		b.grid[rc] = &mark{
+		m := &mark{
 			image: t.image,
 			pos:   p,
 			rc:    rc,
 			size:  t.size,
 		}
+		marks = append(marks, m)
+	}
+	return marks
+}
+
+func (b *Board) finalizePosition(t *Tetromino) {
+	marks := b.positions(t)
+	for _, m := range marks {
+		b.grid[m.rc] = m
 	}
 }
 
@@ -127,7 +156,7 @@ func (b *Board) Draw(screen *ebiten.Image) {
 
 func (b *Board) ClearFullRows(t *Tetromino) []int {
 	blks := t.blocks()
-	log.Printf("clearing full rows, type: %s, blks: %v", t.tetro, blks)
+	//log.Printf("clearing full rows, type: %s, blks: %v", t.tetro, blks)
 	size := t.size
 	marks := [][]*mark{}
 	rows := []int{}
@@ -143,12 +172,12 @@ func (b *Board) ClearFullRows(t *Tetromino) []int {
 				continue
 			}
 			set[iy] = true
-			log.Printf("iy: %d, bx: %d, by: %d, bw: %d, bh: %d", iy, bx, by, bw, bh)
+			//log.Printf("iy: %d, bx: %d, by: %d, bw: %d, bh: %d", iy, bx, by, bw, bh)
 			hasRow := true
 			for ix := bx; ix < bw; ix++ {
 				rc := [2]int{ix, iy}
 				_, isInRow := b.grid[rc]
-				log.Printf("ix: %d, rc: %v, isInRow: %v", ix, rc, isInRow)
+				//log.Printf("ix: %d, rc: %v, isInRow: %v", ix, rc, isInRow)
 				hasRow = hasRow && isInRow
 			}
 			if !hasRow {
@@ -164,11 +193,8 @@ func (b *Board) ClearFullRows(t *Tetromino) []int {
 			marks = append(marks, row)
 		}
 	}
-	if len(marks) > 0 {
-		log.Printf("removing row: %v", marks[0][0])
-	}
 	for _, row := range marks {
-		log.Printf("len row: %d", len(row))
+		//log.Printf("len row: %d", len(row))
 		for _, mark := range row {
 			delete(b.grid, mark.rc)
 		}

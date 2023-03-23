@@ -1,16 +1,10 @@
 * Tasks
 
-** TODO Fix peices overshooting the highest bottom position
-
-** TODO Start the game with a different seed
-
-** Add flags to control how the program runs
-
 ** TODO Make a start screen
 
 ** TODO Need an ending screen
 
-** TODO Record each even and replay those events
+** TODO Record each event and replay those events
 
 ** TODO Fix rotation on the sides of the board to keep the shape on the board
    Rotating a Z piece by the right side of the board cause the right
@@ -22,7 +16,7 @@
    commands to be skipped because only one key command every 1/10th a
    second is captured and executed.
 
-** TODO Draw board possible with vertical grid alignment
+** TODO Draw board possible with vertical grid alignment guides
 
 ** TODO Make an options screen
 
@@ -38,6 +32,15 @@
 
 * Completed
 
+** DONE Add flags to control how the program runs
+   New flags have been added to control the =seed=, and although not yet
+   used, there is a =dev-mode= flag.
+** DONE Start the game with a different seed
+   There is now a new flag =--seed= to provide a specific seed and also
+   keeps the default seed when the flag is not present.
+** DONE Fix peices overshooting the highest bottom position
+   Once the peice has colided or exited the board a final position is
+   done that moves the current piece to the top of the stack.
 ** DONE Add more to the score based on the number of lines captured
 ** DONE Adjust velocity of new blocks at each level
 ** DONE Make score board level up after every 10 lines captured
