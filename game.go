@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -30,11 +31,14 @@ type Game struct {
 	current *Tetromino
 	next    *Tetromino
 	rnd     rand.Rnd
+
+	audio *Audio
 }
 
 func NewGame(opts NewGameOpts) *Game {
 	p := NewPieces()
 	seed := Seed(opts.Seed())
+	audio := MustLoadAudio()
 	rnd := rand.NewRnd(seed)
 	bg := NewBackground()
 	game := &Game{
@@ -44,6 +48,7 @@ func NewGame(opts NewGameOpts) *Game {
 		pieces:     p,
 		keys:       make(chan ebiten.Key, 1),
 		rnd:        rnd,
+		audio:      audio,
 	}
 	game.createStartPeice()
 	game.createNextPeice()
@@ -119,6 +124,8 @@ func (b *Game) step(now time.Time, elapsed time.Duration) {
 				b.paused = !b.paused
 			case ebiten.KeyK:
 				b.current.Accelerate()
+			case ebiten.Key1:
+				b.audio.jab.Play()
 			}
 		default:
 			b.keyAccum -= keyResolution
@@ -164,11 +171,14 @@ func (b *Game) Update() error {
 	}
 	b.pushKey(ebiten.KeyQ)
 	b.pushKey(ebiten.KeyP)
+	b.pushKey(ebiten.Key1)
 	b.board.CheckBounds(b.current)
 	if b.current.isFrozen {
 		rows := b.board.ClearFullRows(b.current)
 		b.background.scoring = b.background.scoring.Add(len(rows))
 		b.rotateInNextPeice()
+		log.Printf("volume: %f", b.audio.jab.Volume())
+		b.audio.jab.Play()
 	}
 	return nil
 }

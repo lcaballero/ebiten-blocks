@@ -1,5 +1,11 @@
 * Tasks
 
+** TODO Add sounds
+*** DONE Sound when the block hits the bottom or land on the stack
+*** TODO Music to jam-out to when playing the game
+*** TODO Satisfying row completion sounds for 1,2,3,4 rows completed at once
+*** TODO Game over wah-wah-uh-oh sound
+
 ** TODO Make a start screen
 
 ** TODO Need an ending screen
@@ -19,12 +25,6 @@
 ** TODO Draw board possible with vertical grid alignment guides
 
 ** TODO Make an options screen
-
-** TODO Add sounds
-   - Music to jam-out to when playing the game
-   - Sound when the block hits the bottom or land on the stack
-   - Satisfying row completion sounds for 1,2,3,4 rows completed at once
-   - Game over wah-wah-uh-oh sound
 
 * Nice to Haves
 
