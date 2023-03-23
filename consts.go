@@ -34,7 +34,7 @@ func (t Tetro) String() string {
 	case L:
 		return "L"
 	default:
-		return "unkown"
+		return "unknown"
 	}
 }
 

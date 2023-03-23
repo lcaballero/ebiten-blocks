@@ -50,3 +50,7 @@ func NewPieces() *Pieces {
 		blocks: blocks,
 	}
 }
+
+func (p *Pieces) Len() int {
+	return len(p.blocks)
+}
