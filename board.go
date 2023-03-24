@@ -19,6 +19,16 @@ func NewBoard(box shapes.Rect) *Board {
 	}
 }
 
+func (b *Board) reset() {
+	marks := []*mark{}
+	for _, m := range b.grid {
+		marks = append(marks, m)
+	}
+	for _, m := range marks {
+		delete(b.grid, m.rc)
+	}
+}
+
 func (b *Board) CanGoRight(t *Tetromino) bool {
 	blks := positions[t.tetro]
 	blk := blks[int(t.rot)-1]

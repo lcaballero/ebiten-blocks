@@ -1,12 +1,10 @@
 package main
 
 import (
-	"log"
 	"os"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/lcaballero/ebiten-01/rand"
 	"github.com/lcaballero/ebiten-01/shapes"
 )
@@ -16,14 +14,14 @@ const keyResolution = time.Second / 10
 type Game struct {
 	board      *Board
 	background *Background
+	keys       *KeyHandler
 
 	pieces   *Pieces
 	prev     time.Time
 	last     time.Duration
 	accum    time.Duration
 	seconds  time.Duration
-	frames   float64
-	keys     chan ebiten.Key
+	frames   int
 	keyAccum time.Duration
 	paused   bool
 
@@ -44,9 +42,9 @@ func NewGame(opts NewGameOpts) *Game {
 	game := &Game{
 		background: bg,
 		board:      NewBoard(bg.board),
+		keys:       NewKeyHandler(),
 		prev:       time.Now(),
 		pieces:     p,
-		keys:       make(chan ebiten.Key, 1),
 		rnd:        rnd,
 		audio:      audio,
 	}
@@ -96,16 +94,22 @@ func (b *Game) rotateInNextPeice() {
 	b.createNextPeice()
 }
 
+func (b *Game) restart() {
+	b.createStartPeice()
+	b.createNextPeice()
+	b.background.reset()
+	b.board.reset()
+}
+
 func (b *Game) step(now time.Time, elapsed time.Duration) {
 	b.prev = now
 	b.last = elapsed
 	b.accum += elapsed
 	b.keyAccum += elapsed
 	ds := b.accum - b.seconds
-	hasTics := ds > time.Second
 	for b.keyAccum > keyResolution {
 		select {
-		case key := <-b.keys:
+		case key := <-b.keys.handler:
 			switch key {
 			case ebiten.KeyL:
 				if b.board.CanGoRight(b.current) {
@@ -126,30 +130,21 @@ func (b *Game) step(now time.Time, elapsed time.Duration) {
 				b.current.Accelerate()
 			case ebiten.Key1:
 				b.audio.jab.Play()
+			case ebiten.Key0:
+				b.restart()
 			}
 		default:
 			b.keyAccum -= keyResolution
 		}
 	}
-
+	hasTics := ds > time.Second
 	for ds > time.Second {
 		b.seconds += time.Second
 		ds -= time.Second
 	}
 	if hasTics {
-		//log.Printf("seconds: %s, fps: %.1f", b.seconds, b.frames)
+		//log.Printf("fps: %d", b.frames)
 		b.frames = 0
-	}
-}
-
-func (b *Game) pushKey(key ebiten.Key) {
-	isPressed := inpututil.IsKeyJustPressed(key)
-	if !isPressed {
-		return
-	}
-	select {
-	case b.keys <- key:
-	default:
 	}
 }
 
@@ -162,22 +157,12 @@ func (b *Game) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyQ) {
 		os.Exit(1)
 	}
-	if !b.paused {
-		b.pushKey(ebiten.KeyJ)
-		b.pushKey(ebiten.KeyL)
-		b.pushKey(ebiten.KeySpace)
-		b.pushKey(ebiten.KeyR)
-		b.pushKey(ebiten.KeyK)
-	}
-	b.pushKey(ebiten.KeyQ)
-	b.pushKey(ebiten.KeyP)
-	b.pushKey(ebiten.Key1)
+	b.keys.Update(b.paused)
 	b.board.CheckBounds(b.current)
 	if b.current.isFrozen {
 		rows := b.board.ClearFullRows(b.current)
 		b.background.scoring = b.background.scoring.Add(len(rows))
 		b.rotateInNextPeice()
-		log.Printf("volume: %f", b.audio.jab.Volume())
 		b.audio.jab.Play()
 	}
 	return nil

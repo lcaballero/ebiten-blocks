@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/wav"
@@ -16,30 +17,9 @@ type Sound struct {
 	stream *wav.Stream
 }
 
-func (a *Sound) SetVolume(lvl float64) {
-	a.SetVolume(lvl)
-}
-
-func (a *Sound) Volume() float64 {
-	return a.player.Volume()
-}
-
-func (a *Sound) Play() error {
-	// As audioPlayer has one stream and remembers the playing position,
-	// rewinding is needed before playing when reusing audioPlayer.
-	if err := a.player.Rewind(); err != nil {
-		return err
-	}
-	a.player.Play()
-	return nil
-}
-
-type Audio struct {
-	jab *Sound
-}
-
-func MustLoadAudio() *Audio {
-	bin, err := ioutil.ReadFile("./jab.wav")
+func NewSound(path string) *Sound {
+	log.Printf("loading audio: %s", path)
+	bin, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
@@ -53,11 +33,36 @@ func MustLoadAudio() *Audio {
 		panic(err)
 	}
 	player.SetVolume(.5)
+	return &Sound{
+		ctx:    context,
+		stream: stream,
+		player: player,
+	}
+}
+
+func (a *Sound) SetVolume(lvl float64) {
+	a.SetVolume(lvl)
+}
+
+func (a *Sound) Volume() float64 {
+	return a.player.Volume()
+}
+
+func (a *Sound) Play() error {
+	if err := a.player.Rewind(); err != nil {
+		return err
+	}
+	a.player.Play()
+	return nil
+}
+
+type Audio struct {
+	jab *Sound
+}
+
+func MustLoadAudio() *Audio {
+	sound := NewSound("./jab.wav")
 	return &Audio{
-		jab: &Sound{
-			ctx:    context,
-			stream: stream,
-			player: player,
-		},
+		jab: sound,
 	}
 }

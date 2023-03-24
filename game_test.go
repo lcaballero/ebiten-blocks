@@ -37,7 +37,7 @@ func Test_NewGame(t *testing.T) {
 	assert.Equal(t, 320, w)
 	assert.Equal(t, 240, h)
 
-	assert.Equal(t, 0.0, g.frames)
+	assert.Equal(t, 0, g.frames)
 	assert.Equal(t, time.Duration(0), g.keyAccum)
 	assert.Equal(t, time.Duration(0), g.last)
 	assert.Equal(t, time.Duration(0), g.accum)

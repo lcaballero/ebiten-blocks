@@ -32,6 +32,10 @@ func NewBackground() *Background {
 	}
 }
 
+func (b *Background) reset() {
+	b.scoring = ScoreBoard{Score: 0, Lines: 0, Level: 1}
+}
+
 func (b *Background) Draw(screen *ebiten.Image) {
 	if b.ctx == nil {
 		bounds := screen.Bounds()
