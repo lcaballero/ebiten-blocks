@@ -10,6 +10,9 @@ sub-commands:
         type: int64
         usage: "use the given seed for rng"
         value: 0
+      - name: show-fps
+        type: bool
+        usage: "while running show the fps"
       - name: dev
         type: bool
         usage: "run in dev-mode with some dev useful key-handling"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -9,28 +10,25 @@ import (
 	"github.com/lcaballero/ebiten-01/shapes"
 )
 
-const keyResolution = time.Second / 10
-
 type Game struct {
 	board      *Board
 	background *Background
-	keys       *KeyHandler
+	keys       *KBHandler
+	audio      *Audio
 
-	pieces   *Pieces
-	prev     time.Time
-	last     time.Duration
-	accum    time.Duration
-	seconds  time.Duration
-	frames   int
-	keyAccum time.Duration
-	paused   bool
-
-	// game pieces
-	current *Tetromino
-	next    *Tetromino
+	prev    time.Time
+	elapsed time.Duration // time elapsed during last frame
+	accum   time.Duration
+	seconds time.Duration
+	frames  int
+	paused  bool
+	showFPS bool
 	rnd     rand.Rnd
 
-	audio *Audio
+	// game pieces
+	pieces  *Pieces
+	current *Tetromino
+	next    *Tetromino
 }
 
 func NewGame(opts NewGameOpts) *Game {
@@ -42,11 +40,12 @@ func NewGame(opts NewGameOpts) *Game {
 	game := &Game{
 		background: bg,
 		board:      NewBoard(bg.board),
-		keys:       NewKeyHandler(),
+		keys:       NewKBHandler(),
 		prev:       time.Now(),
 		pieces:     p,
 		rnd:        rnd,
 		audio:      audio,
+		showFPS:    opts.ShowFps(),
 	}
 	game.createStartPeice()
 	game.createNextPeice()
@@ -95,69 +94,67 @@ func (b *Game) rotateInNextPeice() {
 }
 
 func (b *Game) restart() {
-	b.createStartPeice()
-	b.createNextPeice()
 	b.background.reset()
 	b.board.reset()
+	b.createStartPeice()
+	b.createNextPeice()
 }
 
-func (b *Game) step(now time.Time, elapsed time.Duration) {
-	b.prev = now
-	b.last = elapsed
+func (b *Game) step(elapsed time.Duration) {
 	b.accum += elapsed
-	b.keyAccum += elapsed
-	ds := b.accum - b.seconds
-	for b.keyAccum > keyResolution {
-		select {
-		case key := <-b.keys.handler:
-			switch key {
-			case ebiten.KeyL:
-				if b.board.CanGoRight(b.current) {
-					b.current.MoveRight()
-				}
-			case ebiten.KeyJ:
-				if b.board.CanGoLeft(b.current) {
-					b.current.MoveLeft()
-				}
-			case ebiten.KeySpace:
-				b.current.RotateRight()
-			case ebiten.KeyR:
-				b.current.pos = b.top()
-				b.current.isFrozen = false
-			case ebiten.KeyP:
-				b.paused = !b.paused
-			case ebiten.KeyK:
-				b.current.Accelerate()
-			case ebiten.Key1:
-				b.audio.jab.Play()
-			case ebiten.Key0:
-				b.restart()
+	select {
+	case key := <-b.keys.handler:
+		switch key {
+		case ebiten.KeyL:
+			if b.board.CanGoRight(b.current) {
+				b.current.MoveRight()
 			}
-		default:
-			b.keyAccum -= keyResolution
+		case ebiten.KeyJ:
+			if b.board.CanGoLeft(b.current) {
+				b.current.MoveLeft()
+			}
+		case ebiten.KeySpace:
+			b.current.RotateRight()
+		case ebiten.KeyR:
+			b.current.pos = b.top()
+			b.current.isFrozen = false
+		case ebiten.KeyP:
+			b.paused = !b.paused
+		case ebiten.KeyK:
+			b.current.Accelerate()
+		case ebiten.Key1:
+			b.audio.jab.Play()
+		case ebiten.Key0:
+			b.restart()
 		}
+	default:
 	}
+	ds := b.accum - b.seconds
 	hasTics := ds > time.Second
 	for ds > time.Second {
 		b.seconds += time.Second
 		ds -= time.Second
 	}
 	if hasTics {
-		//log.Printf("fps: %d", b.frames)
+		if b.showFPS {
+			log.Printf("fps: %d", b.frames)
+		}
 		b.frames = 0
 	}
 }
 
 func (b *Game) Update() error {
-	b.step(time.Now(), time.Since(b.prev))
-	ds := float64(b.last) / float64(time.Second)
+	b.elapsed = time.Since(b.prev)
+	b.prev = time.Now()
+	b.step(b.elapsed)
+	ds := float64(b.elapsed) / float64(time.Second)
 	if !b.paused {
-		b.current.Update(b.last, ds)
+		b.current.Update(b.elapsed, ds)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyQ) {
 		os.Exit(1)
 	}
-	b.keys.Update(b.paused)
+	b.keys.Update(b.paused, b.elapsed)
 	b.board.CheckBounds(b.current)
 	if b.current.isFrozen {
 		rows := b.board.ClearFullRows(b.current)
