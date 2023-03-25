@@ -1,5 +1,7 @@
 * Tasks
 
+** TODO Prevent movement left or right if it would cause a colision
+
 ** TODO Add sounds
 *** DONE Sound when the block hits the bottom or land on the stack
 *** TODO Music to jam-out to when playing the game
@@ -12,9 +14,7 @@
 
 ** TODO Record each event and replay those events
 
-** TODO Fix rotation on the sides of the board to keep the shape on the board
-   Rotating a Z piece by the right side of the board cause the right
-   side of the peice to go outside the board.
+** TODO Allow rotation at side of board by moving piece further to center
 
 ** TODO Fix how consuming keys effects different commands
    Right now keys are consumed at 1/10 a second.  Faster rates cause a
@@ -32,6 +32,9 @@
 
 * Completed
 
+** DONE Fix rotation on the sides of the board to keep the shape on the board
+   Rotating a Z piece by the right side of the board cause the right
+   side of the peice to go outside the board.
 ** DONE Add flags to control how the program runs
    New flags have been added to control the =seed=, and although not yet
    used, there is a =dev-mode= flag.

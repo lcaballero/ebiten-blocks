@@ -38,6 +38,27 @@ func (t Tetro) String() string {
 	}
 }
 
+func ToTetro(s string) Tetro {
+	switch s {
+	case "I":
+		return I
+	case "O":
+		return O
+	case "T":
+		return T
+	case "S":
+		return S
+	case "Z":
+		return Z
+	case "J":
+		return J
+	case "L":
+		return L
+	default:
+		return I
+	}
+}
+
 func RandTetro(rnd rand.Rnd) Tetro {
 	maxTetro := int(L)
 	n := rnd.Int(maxTetro)
@@ -52,6 +73,10 @@ const (
 	R3 Rotation = 3
 	R4 Rotation = 4
 )
+
+func (r Rotation) AsIndex() int {
+	return int(r) - 1
+}
 
 func (r Rotation) Inc(t Tetro) Rotation {
 	length := len(positions[t])

@@ -10,6 +10,10 @@ sub-commands:
         type: int64
         usage: "use the given seed for rng"
         value: 0
+      - name: repeat-piece
+        type: string
+        usage: "generate the same piece repeatedly (I,O,T,S,Z,J,L)"
+        value: "I"
       - name: show-fps
         type: bool
         usage: "while running show the fps"

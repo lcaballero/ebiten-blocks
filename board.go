@@ -56,6 +56,24 @@ func (b *Board) CanGoLeft(t *Tetromino) bool {
 	return true
 }
 
+func (b *Board) CanRotate(t *Tetromino) bool {
+	shape := positions[t.tetro]
+	blks := shape[t.rot.Inc(t.tetro).AsIndex()]
+	size := t.size
+	curr := t.pos
+	for _, p := range blks {
+		pos := curr.Add(p.Scale(size, size))
+		x := pos.X() + size
+		if x > b.box.MaxX() {
+			return false
+		}
+		if x < b.box.MinX() {
+			return false
+		}
+	}
+	return true
+}
+
 func (b *Board) CheckBounds(t *Tetromino) {
 	size := t.size
 	y := t.pos.Y() / size

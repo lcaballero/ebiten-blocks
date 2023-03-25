@@ -11,6 +11,7 @@ import (
 )
 
 type Game struct {
+	opts       NewGameOpts
 	board      *Board
 	background *Background
 	keys       *KBHandler
@@ -38,6 +39,7 @@ func NewGame(opts NewGameOpts) *Game {
 	rnd := rand.NewRnd(seed)
 	bg := NewBackground()
 	game := &Game{
+		opts:       opts,
 		background: bg,
 		board:      NewBoard(bg.board),
 		keys:       NewKBHandler(),
@@ -85,6 +87,10 @@ func (b *Game) createNextPeice() {
 		Dim: shapes.Vec{60, 60},
 	}
 	b.next = next.MoveCenterTo(score.Center())
+	if b.opts.HasRepeatPiece() {
+		b.next.tetro = ToTetro(b.opts.RepeatPiece())
+		b.current.tetro = b.next.tetro
+	}
 }
 
 func (b *Game) rotateInNextPeice() {
@@ -114,7 +120,9 @@ func (b *Game) step(elapsed time.Duration) {
 				b.current.MoveLeft()
 			}
 		case ebiten.KeySpace:
-			b.current.RotateRight()
+			if b.board.CanRotate(b.current) {
+				b.current.RotateRight()
+			}
 		case ebiten.KeyR:
 			b.current.pos = b.top()
 			b.current.isFrozen = false

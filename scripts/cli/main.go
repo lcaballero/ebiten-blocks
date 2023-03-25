@@ -18,6 +18,8 @@ func FlagType(t string) string {
 		return "BoolFlag"
 	case "int64":
 		return "Int64Flag"
+	case "string":
+		return "StringFlag"
 	default:
 		return "unknown"
 	}
@@ -31,6 +33,8 @@ func ContextMethod(t string) string {
 		return "Bool"
 	case "int64":
 		return "Int64"
+	case "string":
+		return "String"
 	default:
 		return "unknown"
 	}
@@ -63,7 +67,7 @@ func DefaultValue(ty string, t interface{}) string {
 						Value: %d,`, t)
 	case "string":
 		return fmt.Sprintf(`
-						Value: %s,`, t)
+						Value: "%s",`, t)
 	default:
 		return ""
 	}
@@ -279,6 +283,7 @@ type Vals interface {
 	Int(string) int
 	Int64(string) int64
 	Bool(string) bool
+	String(string) string
 	IsSet(string) bool
 }
 `)
