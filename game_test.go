@@ -21,6 +21,9 @@ func (v vals) Int(string) int {
 func (v vals) Int64(string) int64 {
 	return 2
 }
+func (v vals) String(string) int64 {
+	return ""
+}
 
 func Test_NewGame(t *testing.T) {
 	g := NewGame(NewGameOpts{vals: vals{}})

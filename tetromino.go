@@ -60,7 +60,7 @@ func (t *Tetromino) RotateRight() {
 
 func (t *Tetromino) roundPosToSize() shapes.Vec {
 	return shapes.Vec{
-		t.pos.X(),
+		math.Floor(t.pos.X()/t.size) * t.size,
 		math.Floor(t.pos.Y()/t.size) * t.size,
 	}
 }

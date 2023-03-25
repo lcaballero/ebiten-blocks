@@ -30,13 +30,18 @@ func (b *Board) reset() {
 }
 
 func (b *Board) CanGoRight(t *Tetromino) bool {
-	blks := positions[t.tetro]
-	blk := blks[int(t.rot)-1]
+	blks := positions[t.tetro][int(t.rot)-1]
 	size := t.size
-	curr := t.pos.Add(shapes.Vec{size})
-	for _, p := range blk {
-		pos := curr.Add(p.Scale(size, size))
+	curr := t.roundPosToSize().Add(shapes.Vec{size})
+	for _, blk := range blks {
+		pos := curr.Add(blk.Scale(size, size))
 		if pos.X() >= b.box.MaxX() {
+			return false
+		}
+		x, y := pos.IntComponents()
+		rc := [2]int{x / 10, y / 10}
+		_, inGrid := b.grid[rc]
+		if inGrid {
 			return false
 		}
 	}
@@ -44,12 +49,18 @@ func (b *Board) CanGoRight(t *Tetromino) bool {
 }
 
 func (b *Board) CanGoLeft(t *Tetromino) bool {
-	blk := t.blocks()
+	blks := positions[t.tetro][int(t.rot)-1]
 	size := t.size
-	curr := t.pos.Add(shapes.Vec{-size})
-	for _, p := range blk {
-		pos := curr.Add(p.Scale(size, size))
+	curr := t.roundPosToSize().Add(shapes.Vec{-size})
+	for _, blk := range blks {
+		pos := curr.Add(blk.Scale(size, size))
 		if pos.X() < b.box.MinX() {
+			return false
+		}
+		x, y := pos.IntComponents()
+		rc := [2]int{x / 10, y / 10}
+		_, inGrid := b.grid[rc]
+		if inGrid {
 			return false
 		}
 	}
