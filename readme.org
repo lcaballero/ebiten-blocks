@@ -19,7 +19,8 @@
   command:
 
   #+begin_src shell
-    go mod tidy && ./run.sh build && ebiten-01
+    go get gopkg.in/yaml.v3
+    go mod tidy && ./run.sh build && ebiten-01 new-game
   #+end_src
 
   That should pull down the project dependencies, write the built
