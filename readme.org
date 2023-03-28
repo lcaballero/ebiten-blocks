@@ -40,3 +40,5 @@
 
   Use =r= to =reset= peice, sending the falling peice to the top, but only
   before it's been placed in the stack
+
+  Use =0= will restart the game with score of zero, level one and clears the board.

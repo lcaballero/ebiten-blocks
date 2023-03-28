@@ -262,3 +262,7 @@ func (b *Board) ClearFullRows(t *Tetromino) []int {
 	}
 	return rows
 }
+
+func (b *Board) IsGameOver() bool {
+	return false
+}

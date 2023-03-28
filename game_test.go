@@ -21,7 +21,7 @@ func (v vals) Int(string) int {
 func (v vals) Int64(string) int64 {
 	return 2
 }
-func (v vals) String(string) int64 {
+func (v vals) String(string) string {
 	return ""
 }
 

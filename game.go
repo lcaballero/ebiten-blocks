@@ -170,6 +170,10 @@ func (b *Game) Update() error {
 		b.rotateInNextPeice()
 		b.audio.jab.Play()
 	}
+	if b.board.IsGameOver() {
+		log.Printf("game over")
+		b.paused = true
+	}
 	return nil
 }
 
